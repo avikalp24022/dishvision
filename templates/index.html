@@ -3,93 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DishVision</title>
+    <title>NutriAI Food Analyzer</title>
     <style>
         body {
-            font-family: Arial, sans-serif;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background-color: #f5f5f5;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: linear-gradient(135deg, #00c6fb 0%, #005bea 100%);
+            min-height: 100vh;
+            margin: 0;
+            padding: 0;
+            /* Ensure body takes full height for background */
+            box-sizing: border-box;
         }
         .container {
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            background: #fff;
+            max-width: 900px;
+            margin: 40px auto 40px auto; /* Add more top/bottom margin for spacing */
+            border-radius: 18px;
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            padding: 40px 30px 40px 30px;
+            /* Add left/right margin for background visibility on all screens */
         }
-        .upload-area {
-            border: 2px dashed #ccc;
-            border-radius: 10px;
-            padding: 40px;
-            text-align: center;
-            margin: 20px 0;
+        .main-grid {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+            align-items: flex-start;
+        }
+        .left-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .upload-label {
+            display: block;
+            margin-bottom: 12px;
+            font-weight: 600;
+            color: #1976d2;
+            font-size: 1.2em;
+            letter-spacing: 0.5px;
+        }
+        #imageInput {
+            display: none;
+        }
+        .custom-upload-btn {
+            background: linear-gradient(90deg, #00c6fb 0%, #005bea 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 32px;
+            font-size: 1em;
+            font-weight: 600;
             cursor: pointer;
-            transition: border-color 0.3s;
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            margin-bottom: 10px;
+            margin-left: 0;
         }
-        .upload-area:hover {
-            border-color: #007bff;
-        }
-        .upload-area.dragover {
-            border-color: #007bff;
-            background-color: #f8f9fa;
-        }
-        .results {
+        .file-name {
             display: none;
-            margin-top: 30px;
         }
-        .results-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 30px;
-            margin-top: 20px;
-        }
-        .image-preview {
-            max-width: 100%;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .nutrition-info {
-            background: #f8f9fa;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        .nutrition-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
-            margin-top: 15px;
-        }
-        .nutrition-item {
-            background: white;
-            padding: 10px;
-            border-radius: 5px;
-            text-align: center;
-        }
-        .loading {
+        #preview {
+            width: 100%;
+            max-width: 260px;
+            max-height: 260px;
+            border-radius: 12px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+            margin-bottom: 18px;
+            object-fit: cover;
+            background: #f4f8fb;
             display: none;
-            text-align: center;
-            margin: 20px 0;
         }
-        .spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #007bff;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto;
+        #analyzeBtn {
+            background: linear-gradient(90deg, #00c6fb 0%, #005bea 100%);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 12px 32px;
+            font-size: 1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s, box-shadow 0.2s;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+            align-self: center;
         }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+        #analyzeBtn:disabled {
+            background: #b2d7f7;
+            cursor: not-allowed;
+        }
+        .right-panel {
+            min-height: 260px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        #result {
+            font-size: 1.08em;
+            color: #222;
+        }
+        .dish-name {
+            font-size: 1.5em;
+            font-weight: 700;
+            color: #005bea;
+            margin-bottom: 10px;
+            letter-spacing: 0.5px;
         }
         .ingredients {
-            margin: 15px 0;
+            margin-bottom: 18px;
         }
-        .ingredients ul {
-            list-style-type: disc;
-            padding-left: 20px;
+        .ingredients-title {
+            font-weight: 600;
+            color: #00a6ff;
+            margin-bottom: 4px;
+        }
+        .ingredients-list {
+            margin: 0;
+            padding-left: 0;
+            color: #444;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2px 18px;
+            list-style: none;
+        }
+        .nutrients-title {
+            font-weight: 600;
+            color: #00a6ff;
+            margin-bottom: 4px;
+        }
+        .nutrients-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px 24px;
+            margin: 0;
+            padding: 0;
+            list-style: none;
+        }
+        .nutrient-item {
+            background: #f4f8fb;
+            border-radius: 6px;
+            padding: 8px 12px;
+            color: #333;
+            font-size: 1em;
+        }
+        .loading {
+            color: #005bea;
+            font-weight: 500;
+            margin-top: 20px;
         }
         .error {
             color: #dc3545;
@@ -98,191 +156,141 @@
             border-radius: 5px;
             margin: 20px 0;
         }
-        @media (max-width: 768px) {
-            .results-grid {
+        @media (max-width: 900px) {
+            .container {
+                padding: 20px 5vw 20px 5vw;
+                margin: 30px 10vw 30px 10vw; /* Add left/right margin */
+            }
+            .main-grid {
                 grid-template-columns: 1fr;
+                gap: 30px;
+            }
+            .right-panel {
+                min-height: 0;
+            }
+            .left-panel {
+                align-items: center;
+            }
+            .ingredients-list, .nutrients-list {
+                grid-template-columns: 1fr;
+            }
+            #preview {
+                max-width: 90vw;
+                max-height: 40vw;
+            }
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px 4vw 10px 4vw;
+                margin: 16px 2vw 16px 2vw; /* More margin for very small screens */
+            }
+            .dish-name {
+                font-size: 1.1em;
+            }
+            .custom-upload-btn, #analyzeBtn {
+                width: 100%;
+                padding: 12px 0;
+                font-size: 1em;
             }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🍔 Food Nutrition Analyzer</h1>
-        <p>Take a photo or upload a food image to get nutritional information</p>
-        
-        <div class="upload-area" id="uploadArea">
-            <p>📸 Click here to upload an image or drag and drop</p>
-            <input type="file" id="fileInput" accept="image/*" style="display: none;">
-        </div>
-        
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>Analyzing your food...</p>
-        </div>
-        
-        <div class="error" id="error" style="display: none;"></div>
-        
-        <div class="results" id="results">
-            <div class="results-grid">
-                <div>
-                    <img id="imagePreview" class="image-preview" alt="Food Image">
-                </div>
-                <div class="nutrition-info">
-                    <h2 id="dishName"></h2>
-                    <div class="ingredients" id="ingredients"></div>
-                    <hr>
-                    <h3>Nutrition Information</h3>
-                    <p id="servingSize"></p>
-                    <div class="nutrition-grid" id="nutritionGrid"></div>
-                </div>
+        <h1 style="color:#1976d2; margin-bottom: 30px; letter-spacing: 1px; font-weight: 700;">NutriAI Food Analyzer</h1>
+        <div class="main-grid">
+            <div class="left-panel">
+                <label class="upload-label" for="imageInput">Upload Food Image</label>
+                <button class="custom-upload-btn" id="customUploadBtn" type="button">Choose Image</button>
+                <input type="file" id="imageInput" accept="image/*">
+                <div class="file-name" id="fileName"></div>
+                <img id="preview" src="#" alt="Image Preview">
+                <button id="analyzeBtn" disabled>Analyze</button>
+            </div>
+            <div class="right-panel">
+                <div id="result"></div>
             </div>
         </div>
     </div>
-
     <script>
-        const uploadArea = document.getElementById('uploadArea');
-        const fileInput = document.getElementById('fileInput');
-        const loading = document.getElementById('loading');
-        const results = document.getElementById('results');
-        const error = document.getElementById('error');
+        const imageInput = document.getElementById('imageInput');
+        const customUploadBtn = document.getElementById('customUploadBtn');
+        const fileNameDiv = document.getElementById('fileName');
+        const preview = document.getElementById('preview');
+        const analyzeBtn = document.getElementById('analyzeBtn');
+        const resultDiv = document.getElementById('result');
+        let imageData = null;
 
-        // Handle file upload
-        uploadArea.addEventListener('click', () => fileInput.click());
-        
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
-        
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
-        
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            const files = e.dataTransfer.files;
-            if (files.length > 0) {
-                handleFile(files[0]);
-            }
-        });
-        
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length > 0) {
-                handleFile(e.target.files[0]);
-            }
+        customUploadBtn.addEventListener('click', function() {
+            imageInput.click();
         });
 
-        function handleFile(file) {
-            if (!file.type.startsWith('image/')) {
-                showError('Please select a valid image file.');
-                return;
-            }
-
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                analyzeImage(e.target.result);
-            };
-            reader.readAsDataURL(file);
-        }
-
-        async function analyzeImage(imageData) {
-            hideError();
-            showLoading();
-            hideResults();
-
-            try {
-                const response = await fetch('/api/analyze', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({ image: imageData })
-                });
-
-                const result = await response.json();
-
-                if (result.success) {
-                    displayResults(result.data, imageData);
-                } else {
-                    showError(result.error || 'Failed to analyze image');
+        imageInput.addEventListener('change', function() {
+            const file = this.files[0];
+            if (file) {
+                fileNameDiv.textContent = '';
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    preview.src = e.target.result;
+                    preview.style.display = 'block';
+                    imageData = e.target.result;
+                    analyzeBtn.disabled = false;
+                    resultDiv.innerHTML = '';
                 }
-            } catch (err) {
-                showError('Network error. Please try again.');
-            } finally {
-                hideLoading();
-            }
-        }
-
-        function displayResults(data, imageData) {
-            // Display image
-            document.getElementById('imagePreview').src = imageData;
-            
-            // Display dish name
-            document.getElementById('dishName').textContent = data.dishName || 'Unknown Dish';
-            
-            // Display ingredients
-            const ingredientsDiv = document.getElementById('ingredients');
-            if (data.Ingredients && data.Ingredients.length > 0) {
-                ingredientsDiv.innerHTML = `
-                    <strong>Ingredients:</strong>
-                    <ul>${data.Ingredients.map(ing => `<li>${ing}</li>`).join('')}</ul>
-                `;
+                reader.readAsDataURL(file);
             } else {
-                ingredientsDiv.innerHTML = '<em>No ingredients detected.</em>';
+                fileNameDiv.textContent = '';
+                preview.style.display = 'none';
+                analyzeBtn.disabled = true;
+                imageData = null;
             }
-            
-            // Display serving size
-            const servingSize = data.Nutrients?.['Per Serving Household Measure'] || 'N/A';
-            document.getElementById('servingSize').textContent = `Per Serving: ${servingSize}g`;
-            
-            // Display nutrition grid
-            const nutritionGrid = document.getElementById('nutritionGrid');
-            const nutrients = data.Nutrients || {};
-            
-            const nutritionItems = [
-                { label: 'Calories', value: nutrients.Calories, unit: 'kcal' },
-                { label: 'Protein', value: nutrients.Protein, unit: 'g' },
-                { label: 'Total Fat', value: nutrients['Total Fat'], unit: 'g' },
-                { label: 'Carbohydrates', value: nutrients.Carbohydrates, unit: 'g' },
-                { label: 'Sugars', value: nutrients.Sugars, unit: 'g' },
-                { label: 'Sodium', value: nutrients.Sodium, unit: 'mg' }
-            ];
-            
-            nutritionGrid.innerHTML = nutritionItems.map(item => `
-                <div class="nutrition-item">
-                    <strong>${item.label}</strong><br>
-                    ${item.value || 'N/A'} ${item.value ? item.unit : ''}
-                </div>
-            `).join('');
-            
-            showResults();
-        }
+        });
 
-        function showLoading() {
-            loading.style.display = 'block';
-        }
-
-        function hideLoading() {
-            loading.style.display = 'none';
-        }
-
-        function showResults() {
-            results.style.display = 'block';
-        }
-
-        function hideResults() {
-            results.style.display = 'none';
-        }
-
-        function showError(message) {
-            error.textContent = message;
-            error.style.display = 'block';
-        }
-
-        function hideError() {
-            error.style.display = 'none';
-        }
+        analyzeBtn.addEventListener('click', function() {
+            if (!imageData) return;
+            analyzeBtn.disabled = true;
+            resultDiv.innerHTML = '<span class="loading">Analyzing...</span>';
+            fetch('/api/analyze', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ image: imageData })
+            })
+            .then(response => response.json())
+            .then(data => {
+                analyzeBtn.disabled = false;
+                if (data.success) {
+                    const food = data.data;
+                    resultDiv.innerHTML = `
+                        <div class="dish-name">${food.dishName || 'Unknown Dish'}</div>
+                        <div class="ingredients">
+                            <div class="ingredients-title">Ingredients:</div>
+                            <ul class="ingredients-list">
+                                ${(food.Ingredients && food.Ingredients.length > 0) ? food.Ingredients.map(i => `<li>${i}</li>`).join('') : '<li>Not available</li>'}
+                            </ul>
+                        </div>
+                        <div class="nutrients-title">Nutrients:</div>
+                        <ul class="nutrients-list">
+                            <li class="nutrient-item"><b>Protein:</b> ${food.Nutrients.Protein ?? 'N/A'}g</li>
+                            <li class="nutrient-item"><b>Total Fat:</b> ${food.Nutrients["Total Fat"] ?? 'N/A'}g</li>
+                            <li class="nutrient-item"><b>Carbohydrates:</b> ${food.Nutrients.Carbohydrates ?? 'N/A'}g</li>
+                            <li class="nutrient-item"><b>Calories:</b> ${food.Nutrients.Calories ?? 'N/A'} kcal</li>
+                            <li class="nutrient-item"><b>Sugars:</b> ${food.Nutrients.Sugars ?? 'N/A'}g</li>
+                            <li class="nutrient-item"><b>Sodium:</b> ${food.Nutrients.Sodium ?? 'N/A'}mg</li>
+                            <li class="nutrient-item"><b>Iron:</b> ${food.Nutrients.Iron ?? 'N/A'}mg</li>
+                            <li class="nutrient-item"><b>Vitamin A:</b> ${food.Nutrients["Vitamin A"] ?? 'N/A'}mcg</li>
+                            <li class="nutrient-item"><b>Vitamin C:</b> ${food.Nutrients["Vitamin C"] ?? 'N/A'}mg</li>
+                            <li class="nutrient-item"><b>Vitamin D:</b> ${food.Nutrients["Vitamin D"] ?? 'N/A'}IU</li>
+                        </ul>
+                    `;
+                } else {
+                    resultDiv.innerHTML = `<div class="error">Error: ${data.error}</div>`;
+                }
+            })
+            .catch(err => {
+                analyzeBtn.disabled = false;
+                resultDiv.innerHTML = `<div class="error">Error: ${err}</div>`;
+            });
+        });
     </script>
 </body>
 </html>
