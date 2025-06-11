@@ -72,6 +72,7 @@ def predict_food_and_nutrition(image):
         If you are confident that the dish is not listed above, set dishName to your most promising guess based on its appearance and ingredients.
         After identifying the most promising dish, recall the ingredients used in making that dish and list them in the response accordingly.
         In case of Nutrition information use average values. Note that the nutrition information must be according to the portion size of the dish.
+        If given image does not contain food, set dishName to "Not Food" and leave Ingredients empty.
         """
 
         prompt+="""Respond as a JSON String in the following format and nothing else:
