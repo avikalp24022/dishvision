@@ -3,219 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🍔 DishVision</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', Arial, sans-serif;
-            background: linear-gradient(135deg, #00c6fb 0%, #005bea 100%);
-            min-height: 100vh;
-            margin: 0;
-            padding: 0;
-            /* Ensure body takes full height for background */
-            box-sizing: border-box;
-            display: flex;                /* Add this */
-            justify-content: center;      /* Add this */
-            align-items: center;          /* Add this */
-        }
-        .container {
-            background: #fff;
-            max-width: 900px;
-            margin: 40px auto 40px auto; /* Add more top/bottom margin for spacing */
-            border-radius: 18px;
-            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
-            padding: 40px 30px 40px 30px;
-            /* Add left/right margin for background visibility on all screens */
-        }
-        .main-grid {
-            display: grid;
-            grid-template-columns: 1fr 2fr;
-            gap: 40px;
-            align-items: flex-start;
-        }
-        .left-panel {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        .upload-label {
-            display: block;
-            margin-bottom: 12px;
-            font-weight: 600;
-            color: #1976d2;
-            font-size: 1.2em;
-            letter-spacing: 0.5px;
-        }
-        #imageInput {
-            display: none;
-        }
-        .custom-upload-btn {
-            background: linear-gradient(90deg, #00c6fb 0%, #005bea 100%);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 32px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s, box-shadow 0.2s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-            margin-bottom: 10px;
-            margin-left: 0;
-        }
-        .file-name {
-            display: none;
-        }
-        #preview {
-            width: 100%;
-            max-width: 260px;
-            max-height: 260px;
-            border-radius: 12px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08);
-            margin-bottom: 18px;
-            object-fit: cover;
-            background: #f4f8fb;
-            display: none;
-        }
-        #analyzeBtn {
-            background: linear-gradient(90deg, #00c6fb 0%, #005bea 100%);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            padding: 12px 32px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s, box-shadow 0.2s;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.07);
-            align-self: center;
-        }
-        #analyzeBtn:disabled {
-            background: #b2d7f7;
-            cursor: not-allowed;
-        }
-        .right-panel {
-            min-height: 260px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-        #result {
-            font-size: 1.08em;
-            color: #222;
-        }
-        .dish-name {
-            font-size: 1.5em;
-            font-weight: 700;
-            color: #005bea;
-            margin-bottom: 10px;
-            letter-spacing: 0.5px;
-        }
-        .ingredients {
-            margin-bottom: 18px;
-        }
-        .ingredients-title {
-            font-weight: 600;
-            color: #00a6ff;
-            margin-bottom: 4px;
-        }
-        .ingredients-list {
-            margin: 0;
-            padding-left: 0;
-            color: #444;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2px 18px;
-            list-style: none;
-        }
-        .nutrients-title {
-            font-weight: 600;
-            color: #00a6ff;
-            margin-bottom: 4px;
-        }
-        .nutrients-list {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px 24px;
-            margin: 0;
-            padding: 0;
-            list-style: none;
-        }
-        .nutrient-item {
-            background: #f4f8fb;
-            border-radius: 6px;
-            padding: 8px 12px;
-            color: #333;
-            font-size: 1em;
-        }
-        .loading {
-            color: #005bea;
-            font-weight: 500;
-            margin-top: 20px;
-        }
-        .error {
-            color: #dc3545;
-            background: #f8d7da;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 20px 0;
-        }
-        @media (max-width: 900px) {
-            .container {
-                padding: 20px 5vw 20px 5vw;
-                margin: 30px 10vw 30px 10vw; /* Add left/right margin */
-            }
-            .main-grid {
-                grid-template-columns: 1fr;
-                gap: 30px;
-            }
-            .right-panel {
-                min-height: 0;
-            }
-            .left-panel {
-                align-items: center;
-            }
-            .ingredients-list, .nutrients-list {
-                grid-template-columns: 1fr;
-            }
-            #preview {
-                max-width: 90vw;
-                max-height: 40vw;
-            }
-        }
-        @media (max-width: 600px) {
-            .container {
-                padding: 10px 4vw 10px 4vw;
-                margin: 16px 2vw 16px 2vw; /* More margin for very small screens */
-            }
-            .dish-name {
-                font-size: 1.1em;
-            }
-            .custom-upload-btn, #analyzeBtn {
-                width: 100%;
-                padding: 12px 0;
-                font-size: 1em;
-            }
-        }
-    </style>
+    <title> DishVision</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
 </head>
 <body>
     <div class="container">
-        <h1 style="color:#1976d2; margin-bottom: 30px; letter-spacing: 1px; font-weight: 700;">🍔DishVision</h1>
+        <h1 class="product-title" > DishVision</h1>
         <div class="main-grid">
             <div class="left-panel">
+                <!-- Upload food image button -->
                 <label class="upload-label" for="imageInput">Upload Food Image</label>
                 <button class="custom-upload-btn" id="customUploadBtn" type="button">Choose Image</button>
+                <!-- Input field for selecting image file -->
                 <input type="file" id="imageInput" accept="image/*">
+                <!-- Display selected file name -->
                 <div class="file-name" id="fileName"></div>
+                <!-- Image preview -->
                 <img id="preview" src="#" alt="Image Preview">
+                <!-- Analyze button -->
                 <button id="analyzeBtn" disabled>Analyze</button>
             </div>
             <div class="right-panel">
+                <!-- Display analysis result -->
                 <div id="result"></div>
             </div>
         </div>
     </div>
     <script>
+        // Get elements
         const imageInput = document.getElementById('imageInput');
         const customUploadBtn = document.getElementById('customUploadBtn');
         const fileNameDiv = document.getElementById('fileName');
@@ -224,35 +39,59 @@
         const resultDiv = document.getElementById('result');
         let imageData = null;
 
+        // Add event listener to custom upload button
         customUploadBtn.addEventListener('click', function() {
             imageInput.click();
         });
 
+        // Add event listener to image input field
         imageInput.addEventListener('change', function() {
             const file = this.files[0];
             if (file) {
+                // Clear selected file name
                 fileNameDiv.textContent = '';
+                // Read file as data URL
                 const reader = new FileReader();
                 reader.onload = function(e) {
+                    // Set image preview source
                     preview.src = e.target.result;
+                    // Show image preview
                     preview.style.display = 'block';
+                    // Save image data
                     imageData = e.target.result;
+                    // Enable analyze button
                     analyzeBtn.disabled = false;
+                    // Clear result div
                     resultDiv.innerHTML = '';
+
+                    // Hide right panel when new image is selected
+                    const rightPanel = document.querySelector('.right-panel');
+                    rightPanel.style.display = 'none';
                 }
                 reader.readAsDataURL(file);
             } else {
+                // Clear selected file name
                 fileNameDiv.textContent = '';
+                // Hide image preview
                 preview.style.display = 'none';
+                // Disable analyze button
                 analyzeBtn.disabled = true;
+                // Clear image data
                 imageData = null;
             }
         });
 
+        // Add event listener to analyze button
         analyzeBtn.addEventListener('click', function() {
             if (!imageData) return;
+            // Disable analyze button while analyzing
             analyzeBtn.disabled = true;
+            // Show right panel when analyze is clicked
+            const rightPanel = document.querySelector('.right-panel');
+            rightPanel.style.display = 'block';
+            // Set result div to loading message
             resultDiv.innerHTML = '<span class="loading">Analyzing...</span>';
+            // Make API call to analyze image
             fetch('/api/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -260,40 +99,56 @@
             })
             .then(response => response.json())
             .then(data => {
+                // Enable analyze button after analysis is complete
                 analyzeBtn.disabled = false;
                 if (data.success) {
                     const food = data.data;
+                    // Set result div to analysis result
                     resultDiv.innerHTML = `
-                        <div class="dish-name">${food.dishName || 'Unknown Dish'}</div>
+                        <div class="dish-name">${(food.dishName && food.dishName.includes('(')) ? 
+    food.dishName.substring(0, food.dishName.indexOf('(')).trim() : 
+    (food.dishName || 'Unknown Dish')}</div>
                         <div class="ingredients">
                             <div class="ingredients-title">Ingredients:</div>
-                            <ul class="ingredients-list">
-                                ${(food.Ingredients && food.Ingredients.length > 0) ? food.Ingredients.map(i => `<li>${i}</li>`).join('') : '<li>Not available</li>'}
-                            </ul>
+                            <div class="ingredients-list">
+                                ${(food.Ingredients && food.Ingredients.length > 0) ? 
+                                    food.Ingredients.map(ingredient => `<div class="ingredient-item">• ${ingredient}</div>`).join('') 
+                                    : '<div class="ingredient-item">• Not available</div>'}
+                            </div>
                         </div>
-                        <div class="nutrients-title">Nutrients:</div>
-                        <ul class="nutrients-list">
-                            <li class="nutrient-item"><b>Protein:</b> ${food.Nutrients.Protein ?? 'N/A'}g</li>
-                            <li class="nutrient-item"><b>Total Fat:</b> ${food.Nutrients["Total Fat"] ?? 'N/A'}g</li>
-                            <li class="nutrient-item"><b>Carbohydrates:</b> ${food.Nutrients.Carbohydrates ?? 'N/A'}g</li>
-                            <li class="nutrient-item"><b>Calories:</b> ${food.Nutrients.Calories ?? 'N/A'} kcal</li>
-                            <li class="nutrient-item"><b>Sugars:</b> ${food.Nutrients.Sugars ?? 'N/A'}g</li>
-                            <li class="nutrient-item"><b>Sodium:</b> ${food.Nutrients.Sodium ?? 'N/A'}mg</li>
-                            <li class="nutrient-item"><b>Iron:</b> ${food.Nutrients.Iron ?? 'N/A'}mg</li>
-                            <li class="nutrient-item"><b>Vitamin A:</b> ${food.Nutrients["Vitamin A"] ?? 'N/A'}mcg</li>
-                            <li class="nutrient-item"><b>Vitamin C:</b> ${food.Nutrients["Vitamin C"] ?? 'N/A'}mg</li>
-                            <li class="nutrient-item"><b>Vitamin D:</b> ${food.Nutrients["Vitamin D"] ?? 'N/A'}IU</li>
-                        </ul>
+                        <div class="nutrients">
+        <div class="nutrients-title">Nutrients:</div>
+        <div class="serving-info nutrient-item">
+            <span><b>Serving Size:</b></span>
+            <span>${food.Nutrients["Per Serving Household Measure"] ?? 'N/A'}</span>
+        </div>
+        <ul class="nutrients-list">
+            <li class="nutrient-item"><span><b>Protein:</b></span><span>${food.Nutrients.Protein ?? 'N/A'}g</span></li>
+            <li class="nutrient-item"><span><b>Total Fat:</b></span><span>${food.Nutrients["Total Fat"] ?? 'N/A'}g</span></li>
+            <li class="nutrient-item"><span><b>Carbohydrates:</b></span><span>${food.Nutrients.Carbohydrates ?? 'N/A'}g</span></li>
+            <li class="nutrient-item"><span><b>Calories:</b></span><span>${food.Nutrients.Calories ?? 'N/A'} kcal</span></li>
+            <li class="nutrient-item"><span><b>Sugars:</b></span><span>${food.Nutrients.Sugars ?? 'N/A'}g</span></li>
+            <li class="nutrient-item"><span><b>Sodium:</b></span><span>${food.Nutrients.Sodium ?? 'N/A'}mg</span></li>
+            <li class="nutrient-item"><span><b>Iron:</b></span><span>${food.Nutrients.Iron ?? 'N/A'}mg</span></li>
+            <li class="nutrient-item"><span><b>Vitamin A:</b></span><span>${food.Nutrients["Vitamin A"] ?? 'N/A'}mcg</span></li>
+            <li class="nutrient-item"><span><b>Vitamin C:</b></span><span>${food.Nutrients["Vitamin C"] ?? 'N/A'}mg</span></li>
+            <li class="nutrient-item"><span><b>Vitamin D:</b></span><span>${food.Nutrients["Vitamin D"] ?? 'N/A'}IU</span></li>
+        </ul>
+    </div>
                     `;
                 } else {
+                    // Set result div to error message
                     resultDiv.innerHTML = `<div class="error">Error: ${data.error}</div>`;
                 }
             })
             .catch(err => {
+                // Enable analyze button after analysis is complete
                 analyzeBtn.disabled = false;
+                // Set result div to error message
                 resultDiv.innerHTML = `<div class="error">Error: ${err}</div>`;
             });
         });
     </script>
 </body>
 </html>
+
