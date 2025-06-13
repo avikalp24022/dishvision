@@ -104,7 +104,7 @@ def predict_food_and_nutrition(image):
             json_str = re.sub(r"^```[a-zA-Z]*\n?", "", json_str)
             json_str = re.sub(r"\n?```$", "", json_str)
 
-        # print("Gemini raw response:", repr(json_str))
+        print("Gemini raw response:", repr(json_str))
 
         # Check if the response is empty
         if not json_str:
@@ -112,7 +112,6 @@ def predict_food_and_nutrition(image):
 
         try:
             food_data = json.loads(json_str)
-            print("Parsed food data:", food_data)  # Debugging output
         except json.JSONDecodeError as e:
             # print("Raw Gemini response:", repr(json_str))  # For debugging
             raise Exception(f"Invalid JSON from Gemini API: {e}\nRaw response: {json_str}")
