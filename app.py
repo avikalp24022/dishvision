@@ -8,8 +8,37 @@ import io
 import base64
 from dotenv import load_dotenv
 import re
+import google.generativeai as genai
+from pydantic import BaseModel, Field
+from typing import List, Optional, Union
 
-# Load environment variables
+
+class NutriInfo(BaseModel):
+    # Removed `None` from Field's default argument
+    Protein: Optional[int] = Field(description="Protein content in grams (integer)")
+    Total_Fat: Optional[int] = Field(alias="Total Fat", description="Total Fat content in grams (integer)")
+    Carbohydrates: Optional[int] = Field(description="Carbohydrates content in grams (integer)")
+    Calories: Optional[int] = Field(description="Calories in kcal (integer)")
+    Sugars: Optional[int] = Field(description="Sugars content in grams (integer)")
+    Sodium: Optional[int] = Field(description="Sodium content in mg (integer)")
+    Per_Serving_Household_Measure: Optional[str] = Field(
+        alias="Per Serving Household Measure", description="Per Serving Household Measure (string, e.g., '100g', '1 cup', or 'N/A')"
+    )
+    Iron: Optional[int] = Field(description="Iron content in mg (integer)")
+    Vitamin_A: Optional[int] = Field(alias="Vitamin A", description="Vitamin A content in mcg (integer)")
+    Vitamin_C: Optional[int] = Field(alias="Vitamin C", description="Vitamin C content in mg (integer)")
+    Vitamin_D: Optional[int] = Field(alias="Vitamin D", description="Vitamin D content in IU (integer)")
+
+class FoodDish(BaseModel):
+    # dishName still uses `...` because it's required and has no default
+    dishName: str = Field(..., description="The name of the food dish. If not a food item, set to 'Not a food item'.")
+    # For list defaults, setting [] directly on the annotation is fine
+    # or you can use Field(default_factory=list) if it's a mutable default.
+    # The current `Field([], ...)` is generally fine.
+    Ingredients: List[str] = Field(description="List of ingredients recalled; empty if not food")
+    Nutrients: NutriInfo = Field(..., description="Nutritional information for the food dish")
+
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -21,7 +50,7 @@ if not api_key:
     raise ValueError("GEMINI_API_KEY not found in environment variables")
 
 genai.configure(api_key=api_key)
-model = genai.GenerativeModel('gemini-2.0-flash-lite')
+model = genai.GenerativeModel('gemini-1.5-flash-latest')
 
 # Load nutrition data
 def load_nutrition_data(nutrition_file_path: str) -> dict:
@@ -72,38 +101,30 @@ def predict_food_and_nutrition(image):
         If you are confident that the dish is not listed above, set dishName to your most promising guess based on its appearance and ingredients.
         After identifying the most promising dish, recall the ingredients used in making that dish and list them in the response accordingly.
         In case of Nutrition information use average values. Note that the nutrition information must be according to the portion size of the dish.
+
+        Ensure all fields are populated:
+        - `dishName`: The name of the food dish. If not a food item set to "Not a food item".
+        - `Ingredients`: A list of recalled ingredients. If no ingredients are visible or identifiable, provide an empty list.
+        - `Nutrients`: Provide detailed nutritional information. If specific nutrient values cannot be determined, use 0 for integers and "N/A" for 'Per Serving Household Measure'.
+        **Strictly adhere to the provided schema and do not return any other text.**
+
         """
 
-        prompt+="""Respond as a JSON String in the following format and nothing else:
-        {
-            "dishName": "the food dish name",
-            "Ingredients": [ /* list of ingredients recalled; empty if not food */ ],
-            "Nutrients": {
-                "Protein": x,        // in grams (integer)
-                "Total Fat": y,      // in grams (integer)
-                "Carbohydrates": z,  // in grams (integer)
-                "Calories": a,       // in kcal (integer)
-                "Sugars": b,         // in grams (integer)
-                "Sodium": c,         // in mg (integer)
-                "Per Serving Household Measure": d, // in grams (integer or string)
-                "Iron": e,           // in mg (integer)
-                "Vitamin A": f,      // in mcg (integer)
-                "Vitamin C": g,      // in mg (integer)
-                "Vitamin D": h       // in IU (integer)
+        response = model.generate_content(
+            contents=[prompt, image], # Pass your prompt and the loaded image object here
+            generation_config={
+                "response_mime_type": "application/json",
+                "response_schema": FoodDish, # Use the Pydantic model for structured response
             }
-        }
-        Do not include any additional text or explanation.
-        """
+        )
 
-        response = model.generate_content([prompt, image])
-        
-        # Process the response
+        # print("response:", response)  # Debugging output
         json_str = response.text.strip()
         if json_str.startswith("```"):
             json_str = re.sub(r"^```[a-zA-Z]*\n?", "", json_str)
             json_str = re.sub(r"\n?```$", "", json_str)
 
-        # print("Gemini raw response:", repr(json_str))
+        # print("response:",response,"Raw Gemini response:", repr(json_str))
 
         # Check if the response is empty
         if not json_str:

@@ -105,37 +105,38 @@
                     const food = data.data;
                     // Set result div to analysis result
                     resultDiv.innerHTML = `
-                        <div class="dish-name">${(food.dishName && food.dishName.includes('(')) ? 
-    food.dishName.substring(0, food.dishName.indexOf('(')).trim() : 
-    (food.dishName || 'Unknown Dish')}</div>
-                        <div class="ingredients">
-                            <div class="ingredients-title">Ingredients:</div>
-                            <div class="ingredients-list">
-                                ${(food.Ingredients && food.Ingredients.length > 0) ? 
-                                    food.Ingredients.map(ingredient => `<div class="ingredient-item">• ${ingredient}</div>`).join('') 
-                                    : '<div class="ingredient-item">• Not available</div>'}
-                            </div>
-                        </div>
-                        <div class="nutrients">
-        <div class="nutrients-title">Nutrients:</div>
-        <div class="serving-info nutrient-item">
-            <span><b>Serving Size:</b></span>
-            <span>${food.Nutrients["Per Serving Household Measure"] ?? 'N/A'}</span>
+                        <div class="dish-name ${food.dishName === "Not a food item" ? 'not-food' : ''}">${(food.dishName && food.dishName.includes('(')) ? 
+        food.dishName.substring(0, food.dishName.indexOf('(')).trim() : 
+        (food.dishName || 'Unknown Dish')}</div>
+    ${food.dishName === "Not a food item" ? '' : `
+        <div class="ingredients">
+            <div class="ingredients-title">Ingredients:</div>
+            <div class="ingredients-list">
+                ${(food.Ingredients && food.Ingredients.length > 0) ? 
+                    food.Ingredients.map(ingredient => `<div class="ingredient-item">• ${ingredient}</div>`).join('') 
+                    : '<div class="ingredient-item">• Not available</div>'}
+            </div>
         </div>
-        <ul class="nutrients-list">
-            <li class="nutrient-item"><span><b>Protein:</b></span><span>${food.Nutrients.Protein ?? 'N/A'}g</span></li>
-            <li class="nutrient-item"><span><b>Total Fat:</b></span><span>${food.Nutrients["Total Fat"] ?? 'N/A'}g</span></li>
-            <li class="nutrient-item"><span><b>Carbohydrates:</b></span><span>${food.Nutrients.Carbohydrates ?? 'N/A'}g</span></li>
-            <li class="nutrient-item"><span><b>Calories:</b></span><span>${food.Nutrients.Calories ?? 'N/A'} kcal</span></li>
-            <li class="nutrient-item"><span><b>Sugars:</b></span><span>${food.Nutrients.Sugars ?? 'N/A'}g</span></li>
-            <li class="nutrient-item"><span><b>Sodium:</b></span><span>${food.Nutrients.Sodium ?? 'N/A'}mg</span></li>
-            <li class="nutrient-item"><span><b>Iron:</b></span><span>${food.Nutrients.Iron ?? 'N/A'}mg</span></li>
-            <li class="nutrient-item"><span><b>Vitamin A:</b></span><span>${food.Nutrients["Vitamin A"] ?? 'N/A'}mcg</span></li>
-            <li class="nutrient-item"><span><b>Vitamin C:</b></span><span>${food.Nutrients["Vitamin C"] ?? 'N/A'}mg</span></li>
-            <li class="nutrient-item"><span><b>Vitamin D:</b></span><span>${food.Nutrients["Vitamin D"] ?? 'N/A'}IU</span></li>
-        </ul>
-    </div>
-                    `;
+        <div class="nutrients">
+            <div class="nutrients-title">Nutrients:</div>
+            <div class="serving-info nutrient-item">
+                <span><b>Serving Size:</b></span>
+                <span>${food.Nutrients["Per Serving Household Measure"] ?? 'N/A'}</span>
+            </div>
+            <ul class="nutrients-list">
+                <li class="nutrient-item"><span><b>Protein:</b></span><span>${food.Nutrients.Protein ?? 'N/A'}g</span></li>
+                <li class="nutrient-item"><span><b>Total Fat:</b></span><span>${food.Nutrients["Total Fat"] ?? 'N/A'}g</span></li>
+                <li class="nutrient-item"><span><b>Carbohydrates:</b></span><span>${food.Nutrients.Carbohydrates ?? 'N/A'}g</span></li>
+                <li class="nutrient-item"><span><b>Calories:</b></span><span>${food.Nutrients.Calories ?? 'N/A'} kcal</span></li>
+                <li class="nutrient-item"><span><b>Sugars:</b></span><span>${food.Nutrients.Sugars ?? 'N/A'}g</span></li>
+                <li class="nutrient-item"><span><b>Sodium:</b></span><span>${food.Nutrients.Sodium ?? 'N/A'}mg</span></li>
+                <li class="nutrient-item"><span><b>Iron:</b></span><span>${food.Nutrients.Iron ?? 'N/A'}mg</span></li>
+                <li class="nutrient-item"><span><b>Vitamin A:</b></span><span>${food.Nutrients["Vitamin A"] ?? 'N/A'}mcg</span></li>
+                <li class="nutrient-item"><span><b>Vitamin C:</b></span><span>${food.Nutrients["Vitamin C"] ?? 'N/A'}mg</span></li>
+                <li class="nutrient-item"><span><b>Vitamin D:</b></span><span>${food.Nutrients["Vitamin D"] ?? 'N/A'}IU</span></li>
+            </ul>
+        </div>
+    `}`;
                 } else {
                     // Set result div to error message
                     resultDiv.innerHTML = `<div class="error">Error: ${data.error}</div>`;

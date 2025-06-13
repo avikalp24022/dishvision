@@ -258,6 +258,11 @@ body {
     margin: 20px 0;
 }
 
+.not-food {
+    color: #ff4444;
+    font-weight: bold;
+}
+
 @media (max-width: 900px) {
     .main-grid {
         flex-direction: column;
