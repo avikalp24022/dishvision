@@ -112,6 +112,7 @@ def predict_food_and_nutrition(image):
 
         try:
             food_data = json.loads(json_str)
+            print("Parsed food data:", food_data)  # Debugging output
         except json.JSONDecodeError as e:
             # print("Raw Gemini response:", repr(json_str))  # For debugging
             raise Exception(f"Invalid JSON from Gemini API: {e}\nRaw response: {json_str}")
