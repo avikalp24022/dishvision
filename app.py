@@ -98,7 +98,7 @@ def predict_food_and_nutrition(image):
 
         response = model.generate_content([prompt, image])
         
-        print("Gemini raw response:", response.text.strip())  # For debugging
+        print("Gemini raw response:", response.text)  # For debugging
         # Process the response
         json_str = response.text.strip()
         if json_str.startswith("```"):
