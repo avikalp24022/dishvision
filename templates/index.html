@@ -108,7 +108,7 @@
                         <div class="dish-name ${(food.dishName && food.dishName.toLowerCase().includes('not ')) ? 'not-food' : ''}">${(food.dishName && food.dishName.includes('(')) ? 
         food.dishName.substring(0, food.dishName.indexOf('(')).trim() : 
         (food.dishName || 'Unknown Dish')}</div>
-    ${food.dishName === "Not a food item" ? '' : `
+    ${food.dishName === "Not a food item... Please try again..." ? '' : `
         <div class="ingredients">
             <div class="ingredients-title">Ingredients:</div>
             <div class="ingredients-list">
