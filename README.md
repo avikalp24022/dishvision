@@ -9,7 +9,7 @@ DishVision is an AI-powered web application that analyzes images of food dishes 
 - **Food Recognition**: Upload an image of a dish and receive an AI-powered prediction of the food item.
 - **Nutritional Analysis**: Automatically retrieve nutrition facts for recognized dishes, including macronutrients (protein, fat, carbohydrates), vitamins, and minerals.
 - **Interactive Web Interface**: User-friendly interface for uploading images and viewing results.
-- **API Access**: RESTful endpoint to analyze images programmatically.
+- **API Access**: Uses Gemini API for Food Recognition and Ingredients task.
 - **Extensible Dataset**: Nutrition information is sourced, cleaned, and processed from reputable sources.
 
 ---
@@ -71,18 +71,6 @@ DishVision is an AI-powered web application that analyzes images of food dishes 
 2. Click "Choose Image" to upload a food dish photo.
 3. Click "Analyze" to let DishVision predict the dish and show its nutritional breakdown.
 
-### API
-
-- POST an image (base64-encoded) to `/api/analyze` to receive predictions and nutrition data.
-
-    ```bash
-    curl -X POST http://localhost:5000/api/analyze \
-         -H "Content-Type: application/json" \
-         -d '{"image": "<base64_image_data>"}'
-    ```
-
----
-
 ## Project Structure
 
 ```
@@ -129,7 +117,7 @@ This project currently does not specify a license. Please contact the repository
 ## Acknowledgements
 
 - [Singapore Health Promotion Board (HPB)](https://focos.hpb.gov.sg/eservices/ENCF/) for nutrition data source.
-- Google Gemini API for AI food recognition.
+- Google Gemini API for AI food recognition and ingredients.
 - Open-source libraries: Flask, Selenium, Pandas, etc.
 
 ---
